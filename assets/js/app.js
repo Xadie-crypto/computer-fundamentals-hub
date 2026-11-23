@@ -35,7 +35,7 @@
   function fmtDateShort(iso) {
     try {
       var d = new Date(iso);
-      return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) + ' · ' +
+      return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) + ', ' +
         d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
     } catch (e) { return ''; }
   }
@@ -61,7 +61,7 @@
     if (q.t === 'id') return String(resp.value || '').trim() || 'No answer';
     if (q.t === 'tf') {
       if (typeof resp.value !== 'boolean') return 'No answer';
-      return resp.value ? 'TRUE' : 'FALSE' + (resp.correction ? ' — ' + resp.correction : ' (no replacement given)');
+      return resp.value ? 'TRUE' : (resp.correction ? 'FALSE. Replace with ' + resp.correction : 'FALSE (no replacement given)');
     }
     return '';
   }
@@ -89,22 +89,22 @@
     var meta = C.meta;
     return '<section class="hero">' +
       '<div class="hero-main">' +
-        '<p class="eyebrow">Computer Fundamentals · Final review</p>' +
-        '<h1>Walk into the exam <em>already ready.</em></h1>' +
-        '<p class="hero-sub">Six source decks, distilled into ' + C.all.length + ' practice questions, tight study notes, and a mock final that mirrors the real paper — identification, multiple choice, modified true or false, and essay.</p>' +
+        '<p class="eyebrow">Final exam review</p>' +
+        '<h1>Computer Fundamentals</h1>' +
+        '<p class="hero-sub">Study notes and ' + C.all.length + ' practice questions for the six source files. Includes a mock final worth 60 points in the same format as the real exam.</p>' +
         '<div class="hero-actions">' +
-          '<a class="btn btn-primary btn-lg" href="#/practice">' + C.icon('target') + ' Start practising</a>' +
+          '<a class="btn btn-primary btn-lg" href="#/practice">' + C.icon('target') + ' Start practice</a>' +
           '<a class="btn btn-ghost btn-lg" href="#/notes/systems">' + C.icon('book') + ' Read the notes</a>' +
         '</div>' +
         '<div class="hero-facts">' +
-          '<span>' + C.icon('layers') + ' 6 topics · ' + C.all.length + ' questions</span>' +
+          '<span>' + C.icon('layers') + ' 6 topics, ' + C.all.length + ' questions</span>' +
           '<span>' + C.icon('timer') + ' ' + meta.durationMinutes + ' minutes</span>' +
-          '<span>' + C.icon('flag') + ' ' + meta.totalPoints + ' points + ' + meta.bonusPoints + ' bonus</span>' +
+          '<span>' + C.icon('flag') + ' ' + meta.totalPoints + ' points plus ' + meta.bonusPoints + ' bonus</span>' +
         '</div>' +
       '</div>' +
       '<div class="hero-aside">' +
         '<div class="exam-ticket">' +
-          '<div class="ticket-label"><span>Final examination</span><b>' + C.esc(meta.examDateLabel) + '</b></div>' +
+          '<div class="ticket-label"><span>Final exam</span><b>' + C.esc(meta.examDateLabel) + '</b></div>' +
           '<div class="countdown">' +
             '<div class="cd-unit"><b data-cd="days">00</b><small>Days</small></div>' +
             '<div class="cd-unit"><b data-cd="hours">00</b><small>Hours</small></div>' +
@@ -121,7 +121,7 @@
           meta.sections.map(function (s) {
             return '<div class="hs-row"><i>' + s.numeral + '</i><span>' + C.esc(s.name) + '</span><b>' + s.total + '</b></div>';
           }).join('') +
-          '<div class="hs-note">' + meta.sections.reduce(function (a, s) { return a + s.total; }, 0) + ' points total · up to ' + meta.bonusPoints + ' bonus</div>' +
+          '<div class="hs-note">' + meta.sections.reduce(function (a, s) { return a + s.total; }, 0) + ' points total, plus up to ' + meta.bonusPoints + ' bonus</div>' +
         '</div>' +
       '</div>' +
     '</section>';
@@ -129,10 +129,10 @@
 
   function quickHTML() {
     return '<div class="quick-grid">' +
-      '<a class="quick-card" href="#/practice">' + C.icon('target') + '<span><strong>Practice set</strong><small>Timed or guided</small></span></a>' +
+      '<a class="quick-card" href="#/practice">' + C.icon('target') + '<span><strong>Practice</strong><small>Guided or test mode</small></span></a>' +
       '<a class="quick-card" href="#/bank">' + C.icon('layers') + '<span><strong>Question bank</strong><small>' + C.all.length + ' with answers</small></span></a>' +
-      '<a class="quick-card" href="#/exam">' + C.icon('spark') + '<span><strong>Mock final</strong><small>60 pts · 2 hours</small></span></a>' +
-      '<a class="quick-card" href="#/progress">' + C.icon('chart') + '<span><strong>Readiness</strong><small>Accuracy by topic</small></span></a>' +
+      '<a class="quick-card" href="#/exam">' + C.icon('spark') + '<span><strong>Mock exam</strong><small>60 points, 2 hours</small></span></a>' +
+      '<a class="quick-card" href="#/progress">' + C.icon('chart') + '<span><strong>Progress</strong><small>Accuracy by topic</small></span></a>' +
     '</div>';
   }
 
@@ -148,7 +148,7 @@
       '<p>' + C.esc(t.blurb) + '</p>' +
       '<div class="topic-meta"><span>' + total + ' questions</span><span>' + (t.minutes || 15) + ' min read</span><span>' + seen + ' seen</span></div>' +
       '<div class="topic-meter">' +
-        '<div class="topic-meter-top"><span>' + (acc == null ? 'Not started' : 'Accuracy') + '</span><b>' + (acc == null ? '—' : acc + '%') + '</b></div>' +
+        '<div class="topic-meter-top"><span>' + (acc == null ? 'Not started' : 'Accuracy') + '</span><b>' + (acc == null ? 'n/a' : acc + '%') + '</b></div>' +
         '<div class="progress-track" style="--tc:' + t.accent + '"><i style="width:' + bar + '%;background:' + t.accent + '"></i></div>' +
       '</div>' +
       '<div class="topic-links">' +
@@ -162,17 +162,17 @@
   function blueprintHTML() {
     var sections = C.meta.sections;
     return '<div class="panel">' +
-      '<div class="panel-head"><div><h3>The paper at a glance</h3><p class="sub">Follows the exam pointers exactly — four sections, 60 points.</p></div>' + C.icon('flag') + '</div>' +
+      '<div class="panel-head"><div><h3>Exam format</h3><p class="sub">Follows the exam pointers: four sections, 60 points.</p></div>' + C.icon('flag') + '</div>' +
       '<div class="blueprint">' +
         sections.map(function (s) {
           return '<div class="blue-row">' +
             '<span class="blue-num">' + s.numeral + '</span>' +
-            '<div><strong>' + C.esc(s.name) + '</strong><small>' + s.items + ' item' + (s.items > 1 ? 's' : '') + ' · ' + C.esc(s.hint) + '</small></div>' +
+            '<div><strong>' + C.esc(s.name) + '</strong><small>' + s.items + ' item' + (s.items > 1 ? 's' : '') + ', ' + C.esc(s.hint) + '</small></div>' +
             '<div class="blue-points"><b>' + s.total + '</b><small>' + (s.items > 1 ? s.items + ' × ' + s.pointsEach : s.pointsEach + ' pts') + '</small></div>' +
           '</div>';
         }).join('') +
       '</div>' +
-      '<div class="blue-total"><span>Sections I–IV</span><span><b>60 points</b> · plus up to 5 bonus</span></div>' +
+      '<div class="blue-total"><span>Sections I to IV</span><span><b>60 points</b>, plus up to 5 bonus</span></div>' +
     '</div>';
   }
 
@@ -181,23 +181,23 @@
     var acc = overall.acc;
     var copy, sub;
     if (overall.n === 0) {
-      copy = 'No attempts logged yet';
-      sub = 'Answer a few practice questions and this panel starts tracking accuracy by topic.';
+      copy = 'No attempts yet';
+      sub = 'Answer a few practice questions to start tracking accuracy by topic.';
     } else if (acc >= 85) {
-      copy = 'Exam-ready range';
-      sub = overall.n + ' attempts at ' + acc + '% accuracy. Keep the streak with a timed set and one full mock.';
+      copy = 'Ready for the exam';
+      sub = overall.n + ' attempts at ' + acc + '% accuracy. Keep it going with a timed set and one full mock exam.';
     } else if (acc >= 65) {
-      copy = 'Solid, still tightening';
-      sub = overall.n + ' attempts at ' + acc + '%. Revisit the lowest bars, then retry the questions you missed.';
+      copy = 'On track';
+      sub = overall.n + ' attempts at ' + acc + '%. Review the lowest topics, then retry the questions you missed.';
     } else {
-      copy = 'Early days';
-      sub = overall.n + ' attempts at ' + acc + '%. Read the notes for the weakest topic before drilling again.';
+      copy = 'More practice needed';
+      sub = overall.n + ' attempts at ' + acc + '%. Read the notes for the weakest topic before practicing again.';
     }
     return '<div class="panel">' +
-      '<div class="panel-head"><div><h3>Readiness snapshot</h3><p class="sub">All practice attempts on this device.</p></div><a class="head-link" href="#/progress">Report ' + C.icon('arrow') + '</a></div>' +
+      '<div class="panel-head"><div><h3>Progress summary</h3><p class="sub">Practice attempts on this device.</p></div><a class="head-link" href="#/progress">Report ' + C.icon('arrow') + '</a></div>' +
       '<div class="readiness">' +
         '<div class="readiness-top">' +
-          '<div class="ring-wrap">' + ring(acc || 0, 118, 8) + '<div class="ring-label"><b>' + (acc == null ? '—' : acc + '%') + '</b><small>accuracy</small></div></div>' +
+          '<div class="ring-wrap">' + ring(acc || 0, 118, 8) + '<div class="ring-label"><b>' + (acc == null ? 'n/a' : acc + '%') + '</b><small>accuracy</small></div></div>' +
           '<div class="readiness-copy"><h3>' + copy + '</h3><p>' + sub + '</p><a class="btn btn-ghost btn-small" href="#/practice">Start a set ' + C.icon('arrow') + '</a></div>' +
         '</div>' +
         '<div class="readiness-list">' +
@@ -206,7 +206,7 @@
             return '<div class="readiness-row">' +
               '<span>' + C.esc(t.label) + '</span>' +
               '<div class="progress-track"><i style="width:' + (stat.acc || 0) + '%;background:' + t.accent + '"></i></div>' +
-              '<b>' + (stat.acc == null ? '—' : stat.acc + '%') + '</b>' +
+              '<b>' + (stat.acc == null ? 'n/a' : stat.acc + '%') + '</b>' +
             '</div>';
           }).join('') +
         '</div>' +
@@ -220,7 +220,7 @@
       { tag: 'PDF', name: '7-Application-Software.pdf', desc: 'Ten categories, freeware, open source, shareware, adware, crippleware.' },
       { tag: 'PDF', name: '8-Programming-Languages.pdf', desc: 'Five generations, source code, assemblers, compilers, interpreters.' },
       { tag: 'PDF', name: '9-Importance-of-Computer-Networks.pdf', desc: 'Components, devices, LAN/MAN/WAN, topologies, protocols.' },
-      { tag: 'DOCX', name: 'TRENDS AND LAWS NOTES.docx', desc: 'Digital Philippines 2022, social media, 1G–5G, edge computing, R.A. 10175 and 10173.' },
+      { tag: 'DOCX', name: 'TRENDS AND LAWS NOTES.docx', desc: 'Digital Philippines 2022, social media, 1G to 5G, edge computing, R.A. 10175 and 10173.' },
       { tag: 'DOCX', name: 'COMPF DETAILS + POINTERS.docx', desc: 'Exam schedule, point distribution, and the emphasis each section demands.' }
     ];
     return '<div class="panel">' +
@@ -268,9 +268,9 @@
       sourcesHTML() +
       '<div class="section-head"><div><h2>How to use this</h2><p>Three passes, roughly one evening each.</p></div></div>' +
       '<div class="how-grid">' +
-        '<div class="how-step"><b>01</b><h4>Read one topic</h4><p>Ten to twenty minutes of tight notes, ending with the pointers the exam actually emphasizes.</p></div>' +
-        '<div class="how-step"><b>02</b><h4>Drill its bank</h4><p>Start with 20 questions in guided mode. Read each explanation, then retry only the misses.</p></div>' +
-        '<div class="how-step"><b>03</b><h4>Sit the mock final</h4><p>Two hours, 60 points, sections I–IV. Grade the essay against the rubric, then review every item.</p></div>' +
+        '<div class="how-step"><b>01</b><h4>Read one topic</h4><p>Ten to twenty minutes of notes, ending with the pointers the exam emphasizes.</p></div>' +
+        '<div class="how-step"><b>02</b><h4>Practice its questions</h4><p>Start with 20 questions in guided mode. Read each explanation, then retry only the misses.</p></div>' +
+        '<div class="how-step"><b>03</b><h4>Take the mock exam</h4><p>Two hours, 60 points, sections I to IV. Grade the essay against the rubric, then review every item.</p></div>' +
       '</div>';
     bindTopicShortcuts(root);
   });
@@ -283,9 +283,9 @@
     if (!id || !C.topicMap[id]) {
       root.innerHTML =
         '<div class="page-head">' +
-          '<p class="eyebrow">Study notes</p>' +
-          '<h1>The six topics, distilled.</h1>' +
-          '<p class="lede">Short, exam-shaped notes built from the six provided sources. Use the pointers at the end of each deck to decide what to memorize.</p>' +
+          '<p class="eyebrow">Course notes</p>' +
+          '<h1>Study notes</h1>' +
+          '<p class="lede">Notes for the six source files. Each topic ends with the exam pointers to focus on.</p>' +
         '</div>' +
         '<div class="topic-grid">' + C.topics.map(topicCard).join('') + '</div>';
       bindTopicShortcuts(root);
@@ -303,7 +303,7 @@
     root.innerHTML =
       '<div class="page-head">' +
         '<a class="back" href="#/">' + C.icon('left') + ' Dashboard</a>' +
-        '<p class="eyebrow">Study notes · ' + C.esc(t.label) + '</p>' +
+        '<p class="eyebrow">Study notes: ' + C.esc(t.label) + '</p>' +
         '<h1>' + C.esc(t.name) + '</h1>' +
         '<p class="lede">' + C.esc(t.blurb) + '</p>' +
         '<div class="head-chips">' +
@@ -367,7 +367,7 @@
   }
   function bankItem(q, b) {
     var on = !!b.revealed[q.id];
-    var answer = q.t === 'tf' ? (q.a ? 'TRUE' : 'FALSE — replace with “' + q.fix + '”') : C.possibleAnswer(q);
+    var answer = q.t === 'tf' ? (q.a ? 'TRUE' : 'FALSE. Replace with “' + q.fix + '”') : C.possibleAnswer(q);
     var opts = '';
     if (q.t === 'mc') {
       opts = '<div class="bank-options">' + q.o.map(function (o, i) {
@@ -393,8 +393,8 @@
     var slice = list.slice(start, start + perPage);
     var items = slice.length
       ? slice.map(function (q) { return bankItem(q, b); }).join('')
-      : '<div class="empty-state" style="margin:40px auto"><p class="eyebrow">No matches</p><h3 style="font-family:var(--font-display);font-size:26px;font-weight:500">Nothing in this slice.</h3><p class="muted">Try a different topic, type, difficulty, or search term.</p><button class="btn btn-ghost btn-small" data-clear-bank>Clear filters</button></div>';
-    return '<div class="bank-meta"><span>Showing <b>' + (list.length ? start + 1 : 0) + '–' + Math.min(start + perPage, list.length) + '</b> of ' + list.length + ' questions</span><span>' + (b.revealed ? Object.keys(b.revealed).length : 0) + ' revealed</span></div>' +
+      : '<div class="empty-state" style="margin:40px auto"><p class="eyebrow">No matches</p><h3 style="font-size:24px;font-weight:600">No questions match.</h3><p class="muted">Try a different topic, type, difficulty, or search term.</p><button class="btn btn-ghost btn-small" data-clear-bank>Clear filters</button></div>';
+    return '<div class="bank-meta"><span>Showing <b>' + (list.length ? start + 1 : 0) + ' to ' + Math.min(start + perPage, list.length) + '</b> of ' + list.length + ' questions</span><span>' + (b.revealed ? Object.keys(b.revealed).length : 0) + ' revealed</span></div>' +
       '<div class="bank-list">' + items + '</div>' +
       '<div class="pagination">' +
         '<button class="icon-btn" data-page="' + (b.page - 1) + '" aria-label="Previous page"' + (b.page <= 1 ? ' disabled' : '') + '>' + C.icon('left') + '</button>' +
@@ -442,8 +442,8 @@
       '<div class="page-head" style="margin-bottom:20px">' +
         '<a class="back" href="#/">' + C.icon('left') + ' Dashboard</a>' +
         '<p class="eyebrow">Question bank</p>' +
-        '<h1>Every question, with the answer.</h1>' +
-        '<p class="lede">Filter by topic, type, or difficulty. Reveal the key when you want to check yourself — the explanation is attached.</p>' +
+        '<h1>Question bank</h1>' +
+        '<p class="lede">Filter by topic, type, or difficulty. Reveal the answer when you want to check yourself. Each question includes an explanation.</p>' +
       '</div>' +
       '<div class="filters">' +
         '<div class="field search-wrap">' + C.icon('search') + '<input class="input" id="bank-search" type="search" placeholder="Search questions, options, answers…" value="' + C.esc(b.search) + '" aria-label="Search questions"></div>' +
@@ -484,7 +484,7 @@
   });
 
   /* =========================================================
-     PRACTICE — SETUP
+     PRACTICE: SETUP
      ========================================================= */
   function ensureSetup() {
     if (!C.state.setup) C.state.setup = { topic: 'mixed', type: 'all', count: 20, mode: 'instant' };
@@ -510,10 +510,10 @@
       '<div class="summary-line"><span>Mode</span><b>' + (setup.mode === 'instant' ? 'Guided' : 'Test') + '</b></div>' +
       '<div class="summary-line"><span>Estimated time</span><b>~' + mins + ' min</b></div>' +
       '<div class="summary-line"><span>Available pool</span><b>' + pool.length + '</b></div>' +
-      '<p class="summary-note" style="margin-top:10px">Pool: ' + counts.mc + ' multiple choice · ' + counts.id + ' identification · ' + counts.tf + ' true or false.</p>' +
+      '<p class="summary-note" style="margin-top:10px">Pool: ' + counts.mc + ' multiple choice, ' + counts.id + ' identification, ' + counts.tf + ' true or false.</p>' +
       '<p class="summary-note">' + (setup.mode === 'instant'
         ? 'Each answer is checked immediately, with the explanation. Best for learning.'
-        : 'Answers stay hidden until the end. Best for simulating the paper.') + '</p>';
+        : 'Answers stay hidden until the end. Best for simulating the real exam.') + '</p>';
   }
   function refreshSetup(root) {
     var setup = ensureSetup();
@@ -571,10 +571,10 @@
       '<div class="page-head">' +
         '<a class="back" href="#/">' + C.icon('left') + ' Dashboard</a>' +
         '<p class="eyebrow">Practice</p>' +
-        '<h1>Build a practice set.</h1>' +
-        '<p class="lede">Pick the topic and format. Guided mode checks every answer with an explanation; test mode holds feedback until the end.</p>' +
+        '<h1>Practice</h1>' +
+        '<p class="lede">Pick a topic and question type. Guided mode checks each answer and shows an explanation. Test mode shows feedback at the end.</p>' +
       '</div>' +
-      (active ? '<div class="resume-banner"><span class="chip chip-accent">In progress</span><div><strong>' + C.esc(topicLabel(active.config.topic) === 'All topics' ? 'All topics' : topicName(active.config.topic)) + '</strong> · question ' + (active.index + 1) + ' of ' + active.questions.length + ' · ' + Object.keys(active.responses).length + ' answered</div><div class="spacer"></div><button class="btn btn-primary btn-small" id="resume-set">Resume</button><button class="btn btn-ghost btn-small" id="discard-set">Discard</button></div>' : '') +
+      (active ? '<div class="resume-banner"><span class="chip chip-accent">In progress</span><div><strong>' + C.esc(topicLabel(active.config.topic) === 'All topics' ? 'All topics' : topicName(active.config.topic)) + '</strong>. Question ' + (active.index + 1) + ' of ' + active.questions.length + ', ' + Object.keys(active.responses).length + ' answered</div><div class="spacer"></div><button class="btn btn-primary btn-small" id="resume-set">Resume</button><button class="btn btn-ghost btn-small" id="discard-set">Discard</button></div>' : '') +
       '<div class="setup-layout">' +
         '<div class="panel setup-panel">' +
           '<div class="setup-block">' +
@@ -616,7 +616,7 @@
           '<div id="setup-summary">' + setupSummaryHTML(setup) + '</div>' +
           '<button class="btn btn-primary btn-block btn-lg" id="setup-start" style="margin-top:14px">Start set</button>' +
           '<p class="summary-note">Progress is saved on this device. You can leave and resume mid-set.</p>' +
-          '<a class="btn btn-ghost btn-block btn-small" href="#/exam" style="margin-top:2px">' + C.icon('spark') + ' Or sit the full mock</a>' +
+          '<a class="btn btn-ghost btn-block btn-small" href="#/exam" style="margin-top:2px">' + C.icon('spark') + ' Or take the full mock exam</a>' +
         '</aside>' +
       '</div>';
 
@@ -643,7 +643,7 @@
   });
 
   /* =========================================================
-     PRACTICE — RUNNER
+     PRACTICE: RUNNER
      ========================================================= */
   var practiceTimer = null;
   function stopPracticeTimer() { if (practiceTimer) { clearInterval(practiceTimer); practiceTimer = null; } }
@@ -687,7 +687,7 @@
       var ok = !!s.correct[q.id];
       var answerLine = '';
       if (q.t === 'tf') {
-        answerLine = q.a ? 'The statement is <b>TRUE</b>.' : 'The statement is <b>FALSE</b> — replace the underlined phrase with <b>' + C.esc(q.fix) + '</b>.';
+        answerLine = q.a ? 'The statement is <b>TRUE</b>.' : 'The statement is <b>FALSE</b>. Replace the underlined phrase with <b>' + C.esc(q.fix) + '</b>.';
       } else {
         answerLine = '<b>' + C.esc(C.possibleAnswer(q)) + '</b>';
       }
@@ -731,7 +731,7 @@
           '<div class="quiz-foot">' +
             '<button class="btn btn-ghost btn-small" id="run-prev"' + (s.index === 0 ? ' disabled' : '') + '>' + C.icon('left') + ' Previous</button>' +
             '<span class="spacer"></span>' +
-            (canNext ? '<span class="kbd-hint"><span class="kbd">Enter</span> next</span>' : '<span class="kbd-hint"><span class="kbd">1–4</span> choose · <span class="kbd">Enter</span> check</span>') +
+            (canNext ? '<span class="kbd-hint"><span class="kbd">Enter</span> next</span>' : '<span class="kbd-hint"><span class="kbd">1 to 4</span> choose, <span class="kbd">Enter</span> to check</span>') +
             primary +
           '</div>' +
         '</div>' +
@@ -935,13 +935,13 @@
   });
 
   /* =========================================================
-     PRACTICE — RESULTS
+     PRACTICE: RESULTS
      ========================================================= */
   function reviewItem(q, resp, ok) {
     var cls = !responseFilled(q, resp) ? ' skipped' : ok ? ' ok' : '';
     var qtext = q.t === 'tf' ? C.statement(q.q) : C.esc(q.q);
     var answer = q.t === 'tf'
-      ? (q.a ? 'TRUE' : 'FALSE — replace with “' + C.esc(q.fix) + '”')
+      ? (q.a ? 'TRUE' : 'FALSE. Replace with “' + C.esc(q.fix) + '”')
       : C.esc(C.possibleAnswer(q));
     return '<div class="review-item' + cls + '">' +
       '<div class="review-top">' + typeChip(q.t) + topicChip(q.topic) + '<span class="chip">' + (ok ? 'Correct' : responseFilled(q, resp) ? 'Missed' : 'Skipped') + '</span></div>' +
@@ -968,7 +968,7 @@
     return keys.map(function (k) {
       var d = map[k];
       var p = Math.round((d.c / d.n) * 100);
-      return '<div class="breakdown-row"><span>' + C.esc(labelFn(k)) + '</span><div class="progress-track"><i style="width:' + p + '%"></i></div><b>' + d.c + '/' + d.n + ' · ' + p + '%</b></div>';
+      return '<div class="breakdown-row"><span>' + C.esc(labelFn(k)) + '</span><div class="progress-track"><i style="width:' + p + '%"></i></div><b>' + d.c + '/' + d.n + ' (' + p + '%)</b></div>';
     }).join('');
   }
 
@@ -979,11 +979,11 @@
       return;
     }
     var percent = C.pct(r.correct, r.total);
-    var headline = percent >= 85 ? 'Sharp work.' : percent >= 65 ? 'Solid progress.' : 'Good start.';
+    var headline = percent >= 85 ? 'Excellent result' : percent >= 65 ? 'Good result' : 'Needs review';
     var sub = percent >= 85
-      ? 'That is exam-ready accuracy on this set. Try a harder pool or the full mock next.'
+      ? 'That is strong accuracy on this set. Try a harder pool or the full mock exam.'
       : percent >= 65
-        ? 'Close. Read the explanations below, then retry the missed items before moving on.'
+        ? 'Review the explanations below, then retry the missed items before moving on.'
         : 'Read the notes for the weakest topic, then run this set again in guided mode.';
 
     root.innerHTML =
@@ -991,7 +991,7 @@
       '<div class="result-hero">' +
         '<div class="score-dial">' + ring(percent, 148, 9) + '<div class="ring-label"><b>' + percent + '%</b><small>score</small></div></div>' +
         '<div class="result-copy">' +
-          '<p class="eyebrow">Practice complete</p>' +
+          '<p class="eyebrow">Practice results</p>' +
           '<h1>' + headline + '</h1>' +
           '<p>' + sub + '</p>' +
           '<div class="result-chips">' + chip(r.config.topic === 'mixed' ? 'All topics' : topicName(r.config.topic)) + chip(r.config.type === 'all' ? 'Mixed types' : typeLabel(r.config.type)) + chip(r.config.mode === 'instant' ? 'Guided' : 'Test mode') + chip(r.correct + ' of ' + r.total + ' correct', percent >= 65 ? 'chip-ok' : 'chip-danger') + '</div>' +
@@ -1007,7 +1007,7 @@
         '<div class="panel"><div class="panel-head"><h3>By question type</h3></div><div class="breakdown">' + breakdownRows(r.byType, typeLabel) + '</div></div>' +
         '<div class="panel"><div class="panel-head"><h3>By topic</h3></div><div class="breakdown">' + breakdownRows(r.byTopic, topicName) + '</div></div>' +
       '</div>' +
-      '<div class="section-head"><div><h2>Review</h2><p>Every item, with the key and explanation.</p></div><div class="seg" id="review-filter">' +
+      '<div class="section-head"><div><h2>Review</h2><p>Every item, with the answer and explanation.</p></div><div class="seg" id="review-filter">' +
         '<button data-filter="all" class="' + (r.filter === 'all' ? 'active' : '') + '">All</button>' +
         '<button data-filter="missed" class="' + (r.filter === 'missed' ? 'active' : '') + '">Missed</button>' +
         '<button data-filter="correct" class="' + (r.filter === 'correct' ? 'active' : '') + '">Correct</button>' +
@@ -1016,7 +1016,7 @@
       '<div class="actions-row">' +
         '<button class="btn btn-primary" id="retry-set">' + C.icon('reset') + ' Retry this setup</button>' +
         '<a class="btn btn-ghost" href="#/practice">Build another set</a>' +
-        '<a class="btn btn-ghost" href="#/exam">' + C.icon('spark') + ' Sit the mock final</a>' +
+        '<a class="btn btn-ghost" href="#/exam">' + C.icon('spark') + ' Take the mock exam</a>' +
       '</div>';
 
     C.$$('#review-filter [data-filter]', root).forEach(function (btn) {
@@ -1077,19 +1077,19 @@
     });
     var focusLine = weakest
       ? (weakest.st.n >= 8
-        ? 'Accuracy is lowest in ' + weakest.t.name + ' (' + weakest.st.acc + '% over ' + weakest.st.n + ' attempts). Re-read that deck, then drill 20 questions.'
-        : weakest.t.name + ' is the least explored topic — only ' + weakest.cov + '% of its bank seen. Start there with a 20-question guided set.')
+        ? 'Accuracy is lowest in ' + weakest.t.name + ' (' + weakest.st.acc + '% over ' + weakest.st.n + ' attempts). Read that topic again, then practice 20 questions.'
+        : weakest.t.name + ' is the least explored topic: only ' + weakest.cov + '% of its questions seen. Start there with a 20-question guided set.')
       : '';
 
     root.innerHTML =
       '<div class="page-head">' +
         '<a class="back" href="#/">' + C.icon('left') + ' Dashboard</a>' +
-        '<p class="eyebrow">Readiness report</p>' +
-        '<h1>Your progress, honestly.</h1>' +
-        '<p class="lede">Everything is stored locally in this browser. Nothing is uploaded. Practice accuracy and mock exam scores stay separate.</p>' +
+        '<p class="eyebrow">Progress report</p>' +
+        '<h1>Your progress</h1>' +
+        '<p class="lede">Stored locally in this browser. Nothing is uploaded. Practice accuracy and mock exam scores are tracked separately.</p>' +
       '</div>' +
       '<div class="stat-grid" style="margin-top:0">' +
-        '<div class="stat-card"><small>Overall accuracy</small><b>' + (overall.acc == null ? '—' : overall.acc + '%') + '</b><span>' + overall.c + ' correct of ' + overall.n + ' attempts</span></div>' +
+        '<div class="stat-card"><small>Overall accuracy</small><b>' + (overall.acc == null ? 'n/a' : overall.acc + '%') + '</b><span>' + overall.c + ' correct of ' + overall.n + ' attempts</span></div>' +
         '<div class="stat-card"><small>Bank coverage</small><b>' + coverage + '%</b><span>' + overall.seen + ' of ' + C.all.length + ' questions seen</span></div>' +
         '<div class="stat-card"><small>Mock exams</small><b>' + exams.length + '</b><span>' + (best ? 'Best: ' + best.total + '/' + best.max : 'None taken yet') + '</span></div>' +
         '<div class="stat-card"><small>Practice sessions</small><b>' + (C.stats.sessions || []).length + '</b><span>' + (C.stats.sessions && C.stats.sessions.length ? 'Last ' + fmtDateShort(C.stats.sessions[0].date) : 'Start a set today') + '</span></div>' +
@@ -1101,37 +1101,37 @@
           '<div class="actions-row"><button class="btn btn-primary btn-small" id="focus-practice">Practise ' + C.esc(weakest ? weakest.t.label : 'a set') + '</button><a class="btn btn-ghost btn-small" href="#/notes/' + (weakest ? weakest.t.id : 'systems') + '">Read the notes</a></div>' +
         '</div>' +
         '<div class="panel">' +
-          '<div class="panel-head"><div><h3>Accuracy by format</h3><p class="sub">Which question type costs you points.</p></div></div>' +
+          '<div class="panel-head"><div><h3>Accuracy by format</h3><p class="sub">Accuracy for each question type.</p></div></div>' +
           '<div class="breakdown">' +
             Object.keys(types).map(function (k) {
               var d = types[k];
               var p = d.n ? Math.round(d.c / d.n * 100) : 0;
-              return '<div class="breakdown-row"><span>' + typeLabel(k) + '</span><div class="progress-track"><i style="width:' + p + '%"></i></div><b>' + (d.n ? p + '%' : '—') + '</b></div>';
+              return '<div class="breakdown-row"><span>' + typeLabel(k) + '</span><div class="progress-track"><i style="width:' + p + '%"></i></div><b>' + (d.n ? p + '%' : 'n/a') + '</b></div>';
             }).join('') +
           '</div>' +
         '</div>' +
       '</div>' +
-      '<div class="section-head"><div><h2>Topic detail</h2><p>Coverage and accuracy across all six decks.</p></div></div>' +
+      '<div class="section-head"><div><h2>Topic detail</h2><p>Coverage and accuracy for all six topics.</p></div></div>' +
       '<div class="panel table-card">' +
         '<table class="data-table"><thead><tr><th>Topic</th><th class="num">Pool</th><th class="num">Seen</th><th class="num">Coverage</th><th class="num">Attempts</th><th class="num">Accuracy</th><th>Status</th></tr></thead><tbody>' +
           C.topics.map(function (t) {
             var st = C.topicStat(t.id);
             var seen = seenCount(t.id);
             var pool = C.topicQuestions(t.id).length;
-            return '<tr><td><strong>' + C.esc(t.name) + '</strong></td><td class="num">' + pool + '</td><td class="num">' + seen + '</td><td class="num">' + C.pct(seen, pool) + '%</td><td class="num">' + st.n + '</td><td class="num">' + (st.acc == null ? '—' : st.acc + '%') + '</td><td>' + readinessPill(st.acc) + '</td></tr>';
+            return '<tr><td><strong>' + C.esc(t.name) + '</strong></td><td class="num">' + pool + '</td><td class="num">' + seen + '</td><td class="num">' + C.pct(seen, pool) + '%</td><td class="num">' + st.n + '</td><td class="num">' + (st.acc == null ? 'n/a' : st.acc + '%') + '</td><td>' + readinessPill(st.acc) + '</td></tr>';
           }).join('') +
         '</tbody></table>' +
       '</div>' +
       '<div class="dash-grid">' +
         '<div class="panel"><div class="panel-head"><div><h3>Recent practice</h3><p class="sub">Last 25 sets on this device.</p></div></div><div class="session-list">' +
           ((C.stats.sessions || []).length ? C.stats.sessions.slice(0, 8).map(function (s) {
-            return '<div class="session-row"><span class="session-date">' + fmtDateShort(s.date) + '</span><span>' + C.esc(s.topic === 'mixed' ? 'Mixed' : topicName(s.topic)) + ' · ' + C.esc(s.type === 'all' ? 'mixed' : typeShort(s.type)) + ' · ' + (s.mode === 'instant' ? 'guided' : 'test') + '</span><span class="spacer"></span><b>' + s.correct + '/' + s.total + '</b></div>';
+            return '<div class="session-row"><span class="session-date">' + fmtDateShort(s.date) + '</span><span>' + C.esc(s.topic === 'mixed' ? 'Mixed' : topicName(s.topic)) + ', ' + C.esc(s.type === 'all' ? 'mixed types' : typeShort(s.type)) + ', ' + (s.mode === 'instant' ? 'guided' : 'test mode') + '</span><span class="spacer"></span><b>' + s.correct + '/' + s.total + '</b></div>';
           }).join('') : '<p class="muted small" style="padding:10px 0">No practice sets yet.</p>') +
         '</div></div>' +
         '<div class="panel"><div class="panel-head"><div><h3>Mock exams</h3><p class="sub">Objective plus self-graded essay.</p></div></div><div class="session-list">' +
           (exams.length ? exams.slice(0, 8).map(function (e) {
-            return '<div class="session-row"><span class="session-date">' + fmtDateShort(e.date) + '</span><span>Objective ' + e.objective + ' · Essay ' + (e.essay == null ? '—' : e.essay) + ' · Bonus ' + (e.bonus || 0) + '</span><span class="spacer"></span><b>' + e.total + '/' + e.max + '</b></div>';
-          }).join('') : '<p class="muted small" style="padding:10px 0">No mock exams yet. <a href="#/exam" style="color:var(--accent)">Sit one</a>.</p>') +
+            return '<div class="session-row"><span class="session-date">' + fmtDateShort(e.date) + '</span><span>Objective ' + e.objective + ', essay ' + (e.essay == null ? 'n/a' : e.essay) + ', bonus ' + (e.bonus || 0) + '</span><span class="spacer"></span><b>' + e.total + '/' + e.max + '</b></div>';
+          }).join('') : '<p class="muted small" style="padding:10px 0">No mock exams yet. <a href="#/exam" style="color:var(--accent)">Take one</a>.</p>') +
         '</div></div>' +
       '</div>' +
       '<div class="danger-zone no-print"><div><h4>Reset all progress</h4><p>Clears accuracy, sessions, and mock exam history from this browser.</p></div><button class="btn btn-ghost btn-small" id="reset-progress">' + C.icon('reset') + ' Reset</button></div>' +

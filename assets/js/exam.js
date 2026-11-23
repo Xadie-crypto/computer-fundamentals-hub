@@ -34,7 +34,7 @@
   function fmtDate(iso) {
     try {
       return new Date(iso).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) +
-        ' · ' + new Date(iso).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+        ', ' + new Date(iso).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
     } catch (e) { return ''; }
   }
   function sectionMeta(key) {
@@ -156,7 +156,7 @@
       return '<tr><td><strong>' + C.esc(t.name) + '</strong></td><td class="num">' + i + '</td><td class="num">' + m + '</td><td class="num">' + f + '</td><td class="num">' + (i + m + f) + '</td></tr>';
     }).join('');
     return '<div class="panel" style="margin-top:16px">' +
-      '<div class="panel-head"><div><h3>Objective coverage by topic</h3><p class="sub">Every attempt follows this blueprint, so no deck is skipped.</p></div></div>' +
+      '<div class="panel-head"><div><h3>Objective coverage by topic</h3><p class="sub">Every attempt uses this blueprint, so every topic is covered.</p></div></div>' +
       '<div class="table-card"><table class="data-table" style="min-width:520px"><thead><tr><th>Topic</th><th class="num">Identification</th><th class="num">Multiple choice</th><th class="num">True / false</th><th class="num">Items</th></tr></thead><tbody>' +
         rows +
         '<tr><td><strong>Total</strong></td><td class="num"><strong>' + totals.id + '</strong></td><td class="num"><strong>' + totals.mc + '</strong></td><td class="num"><strong>' + totals.tf + '</strong></td><td class="num"><strong>' + (totals.id + totals.mc + totals.tf) + '</strong></td></tr>' +
@@ -176,7 +176,7 @@
     if (active) {
       banner = '<div class="resume-banner">' +
         '<span class="chip ' + (expired ? 'chip-danger' : 'chip-accent') + '">' + (expired ? 'Time expired' : 'In progress') + '</span>' +
-        '<div><strong>' + C.esc(active.name) + '</strong> · ' + answeredObjective(active) + ' of ' + active.items.length + ' objective items answered · ' + (expired ? 'time is up' : '<b>' + fmtClockSec(remainingMs(active) / 1000) + '</b> remaining') + '</div>' +
+        '<div><strong>' + C.esc(active.name) + '</strong>, ' + answeredObjective(active) + ' of ' + active.items.length + ' objective items answered. ' + (expired ? 'Time is up.' : '<b>' + fmtClockSec(remainingMs(active) / 1000) + '</b> remaining.') + '</div>' +
         '<div class="spacer"></div>' +
         (expired
           ? '<button class="btn btn-primary btn-small" id="submit-expired">Submit attempt</button>'
@@ -188,7 +188,7 @@
     if (lastResult && typeof lastResult.total === 'number') {
       lastCard = '<div class="resume-banner" style="border-color:var(--line);background:var(--surface)">' +
         '<span class="chip">Last attempt</span>' +
-        '<div><strong>' + lastResult.total + '/' + (lastResult.max || 60) + '</strong> · ' + C.esc(fmtDate(lastResult.date)) + (lastResult.gradingComplete ? ' · essay ' + lastResult.essay + '/10' : ' · essay awaiting self-score') + (lastResult.bonus ? ' · +' + lastResult.bonus + ' bonus' : '') + '</div>' +
+        '<div><strong>' + lastResult.total + '/' + (lastResult.max || 60) + '</strong>, ' + C.esc(fmtDate(lastResult.date)) + (lastResult.gradingComplete ? ', essay ' + lastResult.essay + '/10' : ', essay awaiting self-score') + (lastResult.bonus ? ', plus ' + lastResult.bonus + ' bonus' : '') + '</div>' +
         '<div class="spacer"></div><a class="btn btn-ghost btn-small" href="#/exam-result">Review result</a>' +
       '</div>';
     }
@@ -199,14 +199,14 @@
         '<div class="exam-cover">' +
           '<div class="cover-top">' +
             '<p class="eyebrow">Computer Fundamentals</p>' +
-            '<h1>Final Examination</h1>' +
-            '<p>Mock paper · built from the pointers</p>' +
+            '<h1>Final Exam</h1>' +
+            '<p>Practice test based on the exam pointers</p>' +
           '</div>' +
           '<div class="cover-meta">' +
             '<div><small>Date</small><b>' + C.esc(meta.examDateLabel) + '</b></div>' +
             '<div><small>Time</small><b>' + C.esc(meta.examTime) + '</b></div>' +
             '<div><small>Room</small><b>' + C.esc(meta.room) + '</b></div>' +
-            '<div><small>Total</small><b>' + meta.totalPoints + ' points + ' + meta.bonusPoints + ' bonus</b></div>' +
+            '<div><small>Total</small><b>' + meta.totalPoints + ' points plus ' + meta.bonusPoints + ' bonus</b></div>' +
           '</div>' +
           (active ? '' :
             '<div class="exam-name-row">' +
@@ -217,36 +217,36 @@
           '<div class="instructions">' +
             '<h3>Instructions</h3>' +
             '<ol>' +
-              '<li>This paper has four scored sections and one optional bonus section: Identification (10), Multiple Choice (20), Modified True or False (20), and Essay (10).</li>' +
+              '<li>This exam has four scored sections and one optional bonus section: Identification (10), Multiple Choice (20), Modified True or False (20), and Essay (10).</li>' +
               '<li>In the modified true-or-false section, write <strong>TRUE</strong> if the statement is correct. If it is false, write the <strong>correct replacement</strong> for the underlined word or phrase.</li>' +
               '<li>The essay is scored after submission against the rubric shown with the prompt. The model answer and outline are available for comparison.</li>' +
               '<li>You have <strong>' + meta.durationMinutes + ' minutes</strong>. The timer starts when you begin and keeps running if you leave the page.</li>' +
               '<li>Answers auto-save in this browser. You may move freely across items and flag questions for review.</li>' +
-              '<li>The five bonus items are optional and worth one point each, for a maximum of five bonus points above the 60-point paper.</li>' +
+              '<li>The five bonus items are optional and worth one point each, up to five bonus points above the 60-point total.</li>' +
             '</ol>' +
           '</div>' +
           '<div class="format-table">' +
             '<table><thead><tr><th>Section</th><th>Format</th><th class="num">Items</th><th class="num">Points</th></tr></thead><tbody>' +
               meta.sections.map(function (s) {
-                return '<tr><td>' + s.numeral + ' · ' + C.esc(s.name) + '</td><td>' + C.esc(s.hint) + '</td><td class="num">' + s.items + '</td><td class="num">' + s.total + '</td></tr>';
+                return '<tr><td>' + s.numeral + '. ' + C.esc(s.name) + '</td><td>' + C.esc(s.hint) + '</td><td class="num">' + s.items + '</td><td class="num">' + s.total + '</td></tr>';
               }).join('') +
-              '<tr><td>V · Bonus</td><td>Optional short answers; added on top of the paper</td><td class="num">5</td><td class="num">5</td></tr>' +
+              '<tr><td>V. Bonus</td><td>Optional short answers, counted above the 60 points</td><td class="num">5</td><td class="num">5</td></tr>' +
               '<tr class="total"><td>Scored total</td><td></td><td class="num">41</td><td class="num">60</td></tr>' +
             '</tbody></table>' +
           '</div>' +
           '<div class="exam-start-row">' +
             '<p class="note">' + (active
               ? (expired ? 'The attempt is past its time limit. Submitting now will grade every saved answer.' : 'An attempt is underway. Resume it to keep the original timer and answers, or discard it to start fresh.')
-              : 'No calculators or outside notes are needed. Begin when you are ready to concentrate for two hours.') + '</p>' +
+              : 'No calculators or outside notes are needed. Begin when you are ready.') + '</p>' +
             (active
               ? (expired
                 ? '<button class="btn btn-primary btn-lg" id="submit-expired-2">Submit expired attempt</button>'
-                : '<button class="btn btn-primary btn-lg" id="resume-exam-2">Resume examination ' + C.icon('arrow') + '</button>')
-              : '<button class="btn btn-primary btn-lg" id="exam-start">Begin examination ' + C.icon('arrow') + '</button>') +
+                : '<button class="btn btn-primary btn-lg" id="resume-exam-2">Resume exam ' + C.icon('arrow') + '</button>')
+              : '<button class="btn btn-primary btn-lg" id="exam-start">Begin exam ' + C.icon('arrow') + '</button>') +
           '</div>' +
         '</div>' +
         '<div class="exam-side-cards">' +
-          '<div class="exam-tip"><strong>Time is real</strong>The timer keeps running when you leave. The paper auto-submits at zero.</div>' +
+          '<div class="exam-tip"><strong>Time is real</strong>The timer keeps running when you leave. The exam submits itself at zero.</div>' +
           '<div class="exam-tip"><strong>Answer everything</strong>There is no penalty for a wrong objective answer. Flag and return to what you cannot decide.</div>' +
           '<div class="exam-tip"><strong>Essay self-score</strong>After submitting, score your essay criterion by criterion; the rubric totals 10 points.</div>' +
           '<div class="exam-tip"><strong>Resume safely</strong>Every keystroke is saved locally in this browser. Refresh or close the tab and continue later.</div>' +
@@ -305,7 +305,7 @@
   function paperHeadHTML(exam) {
     return '<div class="paper-head">' +
       '<div class="course">Computer Fundamentals</div>' +
-      '<h1>Final Examination</h1>' +
+      '<h1>Final Exam</h1>' +
       '<div class="meta"><span>Name: <b>' + C.esc(exam.name) + '</b></span><span>Room: <b>' + C.esc(C.meta.room) + '</b></span><span>Points: <b>60 + 5</b></span></div>' +
     '</div>';
   }
@@ -332,7 +332,7 @@
     var last = exam.index === exam.items.length - 1;
     var flagged = !!exam.flags[q.id];
     return paperHeadHTML(exam) +
-      '<div class="section-heading"><h2><span>' + meta.numeral + '</span> ' + C.esc(meta.name) + '</h2><small>' + meta.items + ' items · ' + meta.total + ' points</small></div>' +
+      '<div class="section-heading"><h2><span>' + meta.numeral + '</span> ' + C.esc(meta.name) + '</h2><small>' + meta.items + ' items, ' + meta.total + ' points</small></div>' +
       '<p class="section-directions">' + C.esc(DIRECTIONS[item.section]) + '</p>' +
       '<div class="exam-item">' +
         '<div class="exam-item-top"><span class="item-no">' + localNo + '.</span><span class="chip">' + (item.section === 'tf' ? '2 points' : '1 point') + '</span><span class="item-points">Item ' + localNo + ' of ' + total + '</span></div>' +
@@ -351,7 +351,7 @@
     var e = exam.essay;
     var words = String(exam.essayText || '').trim() ? String(exam.essayText).trim().split(/\s+/).length : 0;
     return paperHeadHTML(exam) +
-      '<div class="section-heading"><h2><span>IV</span> Essay</h2><small>1 item · 10 points</small></div>' +
+      '<div class="section-heading"><h2><span>IV</span> Essay</h2><small>1 item, 10 points</small></div>' +
       '<p class="section-directions">' + C.esc(DIRECTIONS.essay) + '</p>' +
       '<div class="exam-item exam-essay">' +
         '<div class="exam-item-top"><span class="item-no">1.</span><span class="chip">10 points</span><span class="item-points">Self-scored after submission</span></div>' +
@@ -363,14 +363,14 @@
           '<button class="btn btn-ghost btn-small" data-nav="prev">' + C.icon('left') + ' Back to last item</button>' +
           '<span class="spacer"></span>' +
           '<button class="btn btn-ghost btn-small" data-nav="bonus">Bonus section ' + C.icon('arrow') + '</button>' +
-          '<button class="btn btn-primary btn-small" id="exam-submit-2">Submit examination</button>' +
+          '<button class="btn btn-primary btn-small" id="exam-submit-2">Submit exam</button>' +
         '</div>' +
       '</div>';
   }
 
   function bonusPaperHTML(exam) {
     return paperHeadHTML(exam) +
-      '<div class="section-heading"><h2><span>V</span> Bonus</h2><small>5 items · up to 5 points</small></div>' +
+      '<div class="section-heading"><h2><span>V</span> Bonus</h2><small>5 items, up to 5 points</small></div>' +
       '<p class="section-directions">' + C.esc(DIRECTIONS.bonus) + '</p>' +
       '<div class="exam-item">' +
         '<div class="exam-item-top"><span class="item-no">+</span><span class="chip chip-accent">Optional</span><span class="item-points">1 point each</span></div>' +
@@ -383,7 +383,7 @@
         '<div class="exam-foot">' +
           '<button class="btn btn-ghost btn-small" data-nav="essay">' + C.icon('left') + ' Back to essay</button>' +
           '<span class="spacer"></span>' +
-          '<button class="btn btn-primary btn-small" id="exam-submit-3">Submit examination</button>' +
+          '<button class="btn btn-primary btn-small" id="exam-submit-3">Submit exam</button>' +
         '</div>' +
       '</div>';
   }
@@ -415,9 +415,9 @@
     return '<div class="sheet"' + (inline ? ' style="position:static;border:0;box-shadow:none;padding:0"' : ' id="exam-sheet"') + '>' +
       '<h3>Answer sheet</h3>' +
       '<div id="sheet-body">' +
-        group('I · Identification', sectionAnswered(exam, 'id'), 10, cells(idItems, idStart)) +
-        group('II · Multiple choice', sectionAnswered(exam, 'mc'), 20, cells(mcItems, mcStart)) +
-        group('III · True or false', sectionAnswered(exam, 'tf'), 10, cells(tfItems, tfStart)) +
+        group('I. Identification', sectionAnswered(exam, 'id'), 10, cells(idItems, idStart)) +
+        group('II. Multiple choice', sectionAnswered(exam, 'mc'), 20, cells(mcItems, mcStart)) +
+        group('III. True or false', sectionAnswered(exam, 'tf'), 10, cells(tfItems, tfStart)) +
         '<div class="sheet-group"><div class="sheet-label"><span>Written</span><span>Essay &amp; bonus</span></div>' +
           '<div class="sheet-grid" style="grid-template-columns:1fr 1fr">' +
             '<button class="sheet-cell' + (essayDone ? ' answered' : '') + (exam.view === 'essay' ? ' current' : '') + '" data-jump="essay" aria-label="Essay">Essay</button>' +
@@ -436,11 +436,11 @@
 
   function subbarHTML(exam) {
     var tabs = [
-      { key: 'id', label: 'I · Identification' },
-      { key: 'mc', label: 'II · Multiple choice' },
-      { key: 'tf', label: 'III · True or false' },
-      { key: 'essay', label: 'IV · Essay' },
-      { key: 'bonus', label: 'V · Bonus' }
+      { key: 'id', label: 'I. Identification' },
+      { key: 'mc', label: 'II. Multiple choice' },
+      { key: 'tf', label: 'III. True or false' },
+      { key: 'essay', label: 'IV. Essay' },
+      { key: 'bonus', label: 'V. Bonus' }
     ];
     var activeKey = exam.view === 'objective' ? exam.items[exam.index].section : exam.view;
     return tabs.map(function (t) {
@@ -459,7 +459,7 @@
     root.innerHTML =
       '<div class="exam-shell">' +
         '<header class="exam-top">' +
-          '<div class="exam-brand"><span class="mark">C</span><span><strong>COMPF</strong> final</span></div>' +
+          '<div class="exam-brand"><span class="mark">C</span><span><strong>COMPF</strong> Final exam</span></div>' +
           '<span class="save-state"><i class="dot"></i><span id="save-label">Saved</span></span>' +
           '<span class="spacer"></span>' +
           '<span class="exam-timer" id="exam-timer">' + fmtClockSec(remainingMs(exam) / 1000) + '</span>' +
@@ -625,8 +625,8 @@
     if (exit) exit.addEventListener('click', function () {
       saveNow(exam);
       C.openModal({
-        title: 'Leave the examination?',
-        body: '<p>Your answers are saved and the timer keeps running. Choose Resume from the examination page to continue where you left off.</p>',
+        title: 'Leave the exam?',
+        body: '<p>Your answers are saved and the timer keeps running. Choose Resume on the exam page to continue where you left off.</p>',
         actions: [
           { label: 'Stay', kind: 'ghost' },
           { label: 'Leave', kind: 'primary', onClick: function () { C.navigate('exam'); } }
@@ -666,7 +666,7 @@
       if (rem <= 0) {
         clearInterval(examTimer);
         examTimer = null;
-        C.toast('Time is up — submitting your paper.');
+        C.toast('Time is up. Submitting your exam.');
         submitExam(exam, true);
       }
     }
@@ -677,7 +677,7 @@
   C.register('exam-run', function (params, root) {
     var exam = loadActive();
     if (!exam) {
-      root.innerHTML = '<div class="empty-state"><p class="eyebrow">No exam in progress</p><h1>Nothing to resume.</h1><p class="muted">Begin a fresh attempt from the examination page.</p><a class="btn btn-primary" href="#/exam">Open the examination</a></div>';
+      root.innerHTML = '<div class="empty-state"><p class="eyebrow">No exam in progress</p><h1>Nothing to resume.</h1><p class="muted">Start a new attempt from the exam page.</p><a class="btn btn-primary" href="#/exam">Open the exam</a></div>';
       return;
     }
     if (remainingMs(exam) <= 0) {
@@ -693,7 +693,7 @@
     var essayDone = String(exam.essayText || '').trim().length > 0;
     var bonusDone = sectionAnswered(exam, 'bonus');
     C.openModal({
-      title: 'Submit the examination?',
+      title: 'Submit the exam?',
       body: '<p>Submission ends the timer and grades the objective and bonus sections immediately. The essay is scored by you against its rubric on the next page.</p>' +
         '<div class="modal-list">' +
           '<div><span>Identification</span><b>' + sectionAnswered(exam, 'id') + '/10 answered</b></div>' +
@@ -706,7 +706,7 @@
         (objective < exam.items.length ? '<p class="small muted">Unanswered objective items will be marked wrong.</p>' : ''),
       actions: [
         { label: 'Keep working', kind: 'ghost' },
-        { label: 'Submit paper', kind: 'primary', onClick: function () { submitExam(exam, false); } }
+        { label: 'Submit exam', kind: 'primary', onClick: function () { submitExam(exam, false); } }
       ]
     });
   }
@@ -801,14 +801,14 @@
     var localNo = 0;
     for (var i = 0; i <= index; i++) if (exam.items[i].section === item.section) localNo += 1;
     var flagged = exam.flags && exam.flags[q.id];
-    var key = q.t === 'tf' ? (q.a ? 'TRUE' : 'FALSE — ' + q.fix) : C.possibleAnswer(q);
+    var key = q.t === 'tf' ? (q.a ? 'TRUE' : 'FALSE. ' + q.fix) : C.possibleAnswer(q);
     return '<div class="review-item' + (ok ? ' ok' : '') + '">' +
       '<div class="review-top"><span class="chip">' + meta.numeral + '-' + localNo + '</span>' + '<span class="chip">' + (item.section === 'tf' ? '2 pts' : '1 pt') + '</span>' +
         (ok ? '<span class="chip chip-ok">Correct</span>' : '<span class="chip chip-danger">Missed</span>') +
         (flagged ? '<span class="chip chip-accent">Flagged</span>' : '') + '</div>' +
       '<div class="review-q">' + (q.t === 'tf' ? C.statement(q.q) : C.esc(q.q)) + '</div>' +
       '<div class="review-line"><span>Your answer</span><b>' + C.esc(answerDisplay(q, exam.answers[q.id])) + '</b></div>' +
-      '<div class="review-line answer"><span>Key</span><b>' + (q.t === 'tf' ? C.esc(key) : C.esc(key)) + '</b></div>' +
+      '<div class="review-line answer"><span>Answer</span><b>' + C.esc(key) + '</b></div>' +
       (q.e ? '<div class="review-exp">' + C.esc(q.e) + '</div>' : '') +
     '</div>';
   }
@@ -830,7 +830,7 @@
     var scores = result.essayScores || [];
     var sum = scores.reduce(function (a, s) { return a + (typeof s === 'number' ? s : 0); }, 0);
     return '<div class="panel" id="essay-grade" style="margin-top:18px">' +
-      '<div class="panel-head"><div><h3>Section IV · Essay</h3><p class="sub">Score each criterion, then save the final result.</p></div>' +
+      '<div class="panel-head"><div><h3>Section IV. Essay</h3><p class="sub">Score each criterion, then save the final result.</p></div>' +
         (result.gradingComplete ? '<span class="chip chip-ok">Scored ' + result.essay + '/' + max + '</span>' : '<span class="chip chip-accent">Awaiting self-score</span>') + '</div>' +
       '<div class="essay-prompt-box"><strong style="display:block;margin-bottom:6px">' + C.esc(essay.title) + '</strong>' + C.esc(essay.prompt) + '</div>' +
       '<h4 style="font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:6px">Your answer</h4>' +
@@ -860,7 +860,7 @@
   function bonusHTML(result) {
     var exam = result.exam;
     return '<div class="panel" style="margin-top:18px">' +
-      '<div class="panel-head"><div><h3>Section V · Bonus</h3><p class="sub">Optional. ' + result.bonus + ' of ' + result.bonusMax + ' correct.</p></div><span class="chip ' + (result.bonus ? 'chip-ok' : '') + '">+' + result.bonus + ' point' + (result.bonus === 1 ? '' : 's') + '</span></div>' +
+      '<div class="panel-head"><div><h3>Section V. Bonus</h3><p class="sub">Optional. ' + result.bonus + ' of ' + result.bonusMax + ' correct.</p></div><span class="chip ' + (result.bonus ? 'chip-ok' : '') + '">+' + result.bonus + ' point' + (result.bonus === 1 ? '' : 's') + '</span></div>' +
       '<div class="missed-list">' +
         exam.bonus.map(function (b, i) {
           var ok = !!result.bonusCorrect[b.id];
@@ -869,7 +869,7 @@
             '<div class="review-top"><span class="chip">B' + (i + 1) + '</span>' + (ok ? '<span class="chip chip-ok">Correct</span>' : '<span class="chip">No point</span>') + '</div>' +
             '<div class="review-q">' + C.esc(b.q) + '</div>' +
             '<div class="review-line"><span>Your answer</span><b>' + C.esc(String(ans || '').trim() || 'No answer') + '</b></div>' +
-            '<div class="review-line answer"><span>Key</span><b>' + C.esc(b.a[0]) + '</b></div>' +
+            '<div class="review-line answer"><span>Answer</span><b>' + C.esc(b.a[0]) + '</b></div>' +
           '</div>';
         }).join('') +
       '</div>' +
@@ -879,7 +879,7 @@
   C.register('exam-result', function (params, root) {
     var result = C.state.examResult || C.readJSON(C.KEYS.result, null);
     if (!result || !result.exam || !result.exam.items) {
-      root.innerHTML = '<div class="empty-state"><h1>No result yet.</h1><p class="muted">Sit the mock final first; your scored paper appears here.</p><a class="btn btn-primary" href="#/exam">Open the examination</a></div>';
+      root.innerHTML = '<div class="empty-state"><h1>No result yet.</h1><p class="muted">Take the mock exam first. Your scored result appears here.</p><a class="btn btn-primary" href="#/exam">Open the mock exam</a></div>';
       return;
     }
     C.state.examResult = result;
@@ -890,12 +890,12 @@
     var basePct = Math.round((result.total / (result.max || 60)) * 100);
     var finalPct = Math.round(((result.total + (result.bonus || 0)) / (result.max || 60)) * 100);
     var pctForRing = graded ? basePct : Math.round((result.objective / 50) * 100);
-    var headline = !graded ? 'Objective graded.' : basePct >= 90 ? 'Excellent paper.' : basePct >= 78 ? 'Strong paper.' : basePct >= 60 ? 'A passable paper.' : 'More review needed.';
+    var headline = !graded ? 'Objective graded' : basePct >= 90 ? 'Excellent result' : basePct >= 78 ? 'Good result' : basePct >= 60 ? 'Passing result' : 'Needs more review';
     var sub = !graded
-      ? 'Score your essay below to finish the 60-point paper. The objective result is already locked in.'
+      ? 'Score your essay below to finish the 60-point exam. The objective score is already saved.'
       : basePct >= 78
-        ? 'Review every missed item below, then read the model essay against your own answer.'
-        : 'Read the explanations for the missed items, then retake the paper after a full pass through the notes.';
+        ? 'Review the missed items below, then compare the model essay with your answer.'
+        : 'Read the explanations for the missed items, then retake the exam after reviewing the notes.';
     var sec = result.bySection;
 
     root.innerHTML =
@@ -903,20 +903,20 @@
         '<div class="result-banner">' +
           '<div class="score-dial">' + C.ring(pctForRing, 148, 9) + '<div class="ring-label"><b>' + (graded ? basePct + '%' : result.objective + '<small style="font-size:14px">/50</small>') + '</b><small>' + (graded ? 'of 60 points' : 'objective') + '</small></div></div>' +
           '<div>' +
-            '<p class="eyebrow" style="color:#e8b277">Mock final · ' + C.esc(fmtDate(result.date)) + '</p>' +
+            '<p class="eyebrow">Mock exam, ' + C.esc(fmtDate(result.date)) + '</p>' +
             '<h1>' + C.esc(headline) + '</h1>' +
             '<p>' + C.esc(sub) + '</p>' +
             '<div class="result-chips">' +
               '<span class="chip">' + C.esc(result.name || 'Student') + '</span>' +
               (result.autoSubmitted ? '<span class="chip chip-danger">Auto-submitted at time</span>' : '<span class="chip">' + fmtDuration(result.durationSec) + '</span>') +
               (graded ? '<span class="chip chip-ok">' + result.total + '/' + (result.max || 60) + ' base</span>' : '<span class="chip chip-accent">Essay pending</span>') +
-              '<span class="chip">+' + result.bonus + ' bonus</span>' +
+              '<span class="chip">Bonus ' + result.bonus + '</span>' +
             '</div>' +
             '<div class="score-split">' +
               '<div><small>Objective</small><b>' + result.objective + '/50</b></div>' +
-              '<div><small>Essay</small><b>' + (graded ? result.essay + '/' + essayMax : '—/' + essayMax) + '</b></div>' +
-              '<div><small>Bonus</small><b>+' + result.bonus + '/' + result.bonusMax + '</b></div>' +
-              '<div><small>With bonus</small><b>' + (graded ? finalPct + '%' : '—') + '</b></div>' +
+              '<div><small>Essay</small><b>' + (graded ? result.essay + '/' + essayMax : 'Not scored') + '</b></div>' +
+              '<div><small>Bonus</small><b>' + result.bonus + '/' + result.bonusMax + '</b></div>' +
+              '<div><small>With bonus</small><b>' + (graded ? finalPct + '%' : 'n/a') + '</b></div>' +
             '</div>' +
           '</div>' +
         '</div>' +
@@ -925,27 +925,27 @@
           '<div class="stat-card"><small>Identification</small><b>' + sec.id.pts + '/10</b><span>' + sec.id.c + ' of 10 correct</span></div>' +
           '<div class="stat-card"><small>Multiple choice</small><b>' + sec.mc.pts + '/20</b><span>' + sec.mc.c + ' of 20 correct</span></div>' +
           '<div class="stat-card"><small>True or false</small><b>' + sec.tf.pts + '/20</b><span>' + sec.tf.c + ' of 10 correct</span></div>' +
-          '<div class="stat-card"><small>Essay</small><b>' + (graded ? result.essay + '/10' : '—/10') + '</b><span>' + (graded ? 'self-scored' : 'awaiting rubric') + '</span></div>' +
+          '<div class="stat-card"><small>Essay</small><b>' + (graded ? result.essay + '/10' : 'n/a') + '</b><span>' + (graded ? 'self-scored' : 'awaiting rubric') + '</span></div>' +
         '</div>' +
 
-        (graded ? '' : '<div class="resume-banner" style="border-color:var(--accent);margin-top:16px"><span class="chip chip-accent">One step left</span><div>Score the essay below to complete the paper and save the result to your progress report.</div><div class="spacer"></div><button class="btn btn-primary btn-small" id="jump-essay">Score essay</button></div>') +
+        (graded ? '' : '<div class="resume-banner" style="border-color:var(--accent);margin-top:16px"><span class="chip chip-accent">Essay not scored</span><div>Score the essay below to finish the exam and save the result to your progress page.</div><div class="spacer"></div><button class="btn btn-primary btn-small" id="jump-essay">Score essay</button></div>') +
 
         '<div class="panel" style="margin-top:18px">' +
           '<div class="panel-head"><div><h3>Section breakdown</h3><p class="sub">Points earned, with the essay and bonus shown separately.</p></div></div>' +
           '<div class="table-card"><table class="data-table" style="min-width:540px"><thead><tr><th>Section</th><th class="num">Items</th><th class="num">Points</th><th class="num">Percent</th></tr></thead><tbody>' +
-            '<tr><td>I · Identification</td><td class="num">10</td><td class="num">' + sec.id.pts + '/10</td><td class="num">' + Math.round(sec.id.pts / 10 * 100) + '%</td></tr>' +
-            '<tr><td>II · Multiple choice</td><td class="num">20</td><td class="num">' + sec.mc.pts + '/20</td><td class="num">' + Math.round(sec.mc.pts / 20 * 100) + '%</td></tr>' +
-            '<tr><td>III · Modified true or false</td><td class="num">10</td><td class="num">' + sec.tf.pts + '/20</td><td class="num">' + Math.round(sec.tf.pts / 20 * 100) + '%</td></tr>' +
-            '<tr><td>IV · Essay</td><td class="num">1</td><td class="num">' + (graded ? result.essay + '/10' : '—/10') + '</td><td class="num">' + (graded ? Math.round(result.essay / 10 * 100) + '%' : '—') + '</td></tr>' +
+            '<tr><td>I. Identification</td><td class="num">10</td><td class="num">' + sec.id.pts + '/10</td><td class="num">' + Math.round(sec.id.pts / 10 * 100) + '%</td></tr>' +
+            '<tr><td>II. Multiple choice</td><td class="num">20</td><td class="num">' + sec.mc.pts + '/20</td><td class="num">' + Math.round(sec.mc.pts / 20 * 100) + '%</td></tr>' +
+            '<tr><td>III. Modified true or false</td><td class="num">10</td><td class="num">' + sec.tf.pts + '/20</td><td class="num">' + Math.round(sec.tf.pts / 20 * 100) + '%</td></tr>' +
+            '<tr><td>IV. Essay</td><td class="num">1</td><td class="num">' + (graded ? result.essay + '/10' : 'n/a') + '</td><td class="num">' + (graded ? Math.round(result.essay / 10 * 100) + '%' : 'n/a') + '</td></tr>' +
             '<tr><td><strong>Scored total</strong></td><td class="num">' + (graded ? 41 : 40) + '</td><td class="num"><strong>' + (graded ? result.total + '/' + (result.max || 60) : result.objective + '/50 objective') + '</strong></td><td class="num"><strong>' + (graded ? basePct + '%' : Math.round(result.objective / 50 * 100) + '% obj') + '</strong></td></tr>' +
-            '<tr><td>V · Bonus</td><td class="num">5</td><td class="num">+' + result.bonus + '/' + result.bonusMax + '</td><td class="num">' + Math.round(result.bonus / result.bonusMax * 100) + '%</td></tr>' +
+            '<tr><td>V. Bonus</td><td class="num">5</td><td class="num">+' + result.bonus + '/' + result.bonusMax + '</td><td class="num">' + Math.round(result.bonus / result.bonusMax * 100) + '%</td></tr>' +
           '</tbody></table></div>' +
         '</div>' +
 
         essayHTML(result) +
         bonusHTML(result) +
 
-        '<div class="section-head"><div><h2>Objective review</h2><p>Every scored item, key, and explanation.</p></div><div class="seg" id="exam-review-filter">' +
+        '<div class="section-head"><div><h2>Objective review</h2><p>Every scored item, its answer, and an explanation.</p></div><div class="seg" id="exam-review-filter">' +
           '<button data-filter="missed" class="' + (result.reviewFilter === 'missed' ? 'active' : '') + '">Missed</button>' +
           '<button data-filter="all" class="' + (result.reviewFilter === 'all' ? 'active' : '') + '">All</button>' +
           '<button data-filter="correct" class="' + (result.reviewFilter === 'correct' ? 'active' : '') + '">Correct</button>' +
@@ -953,7 +953,7 @@
         '<div id="exam-review-list">' + reviewListHTML(result) + '</div>' +
 
         '<div class="actions-row" style="margin-top:26px">' +
-          '<a class="btn btn-primary" href="#/exam">' + C.icon('reset') + ' Retake the paper</a>' +
+          '<a class="btn btn-primary" href="#/exam">' + C.icon('reset') + ' Retake the exam</a>' +
           '<button class="btn btn-ghost" id="print-result">' + C.icon('printer') + ' Print result</button>' +
           '<a class="btn btn-ghost" href="#/">Back to dashboard</a>' +
         '</div>' +

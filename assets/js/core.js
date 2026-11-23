@@ -328,9 +328,9 @@
     if (route === 'notes') return TOPIC_MAP[params[0]] ? TOPIC_MAP[params[0]].name : 'Notes';
     if (route === 'bank') return 'Question bank';
     if (route === 'practice' || route === 'practice-run' || route === 'practice-result') return 'Practice';
-    if (route === 'progress') return 'Readiness report';
-    if (route === 'exam' || route === 'exam-run' || route === 'exam-result') return 'Mock examination';
-    return 'COMPF Review Hub';
+    if (route === 'progress') return 'Progress';
+    if (route === 'exam' || route === 'exam-run' || route === 'exam-result') return 'Mock exam';
+    return 'Computer Fundamentals Review';
   }
   function errorView(err) {
     return '<div class="view-pad"><div class="empty-state">' +
@@ -356,7 +356,7 @@
     setActiveNav(active);
     var crumb = $('#crumbs');
     if (crumb) crumb.textContent = titleFor(parsed.route, parsed.params);
-    document.title = titleFor(parsed.route, parsed.params) + ' · COMPF Review Hub';
+    document.title = titleFor(parsed.route, parsed.params) + ' | Computer Fundamentals Review';
     window.scrollTo(0, 0);
     try {
       root.innerHTML = '';
