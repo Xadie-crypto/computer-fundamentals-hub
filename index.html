@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>COMPF Review Hub — Computer Fundamentals</title>
+  <meta name="description" content="A complete Computer Fundamentals review hub: study notes from six source files, 630 practice questions, and a 60-point mock final examination.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/styles.css">
+  <script>
+    (function () {
+      try {
+        var t = localStorage.getItem('compf.theme');
+        if (!t) { t = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'; }
+        document.documentElement.setAttribute('data-theme', t);
+      } catch (e) { /* default light */ }
+    })();
+  </script>
+</head>
+<body>
+  <a class="skip-link" href="#view">Skip to content</a>
+
+  <div class="app" id="app">
+    <aside class="sidebar" id="sidebar" aria-label="Main navigation">
+      <a class="brand" href="#/">
+        <span class="brand-mark" aria-hidden="true">C</span>
+        <span class="brand-text">
+          <strong>COMPF</strong>
+          <small>Review Hub</small>
+        </span>
+      </a>
+
+      <nav class="nav">
+        <p class="nav-label">Study</p>
+        <a class="nav-item" href="#/" data-nav="home">
+          <svg class="icon" aria-hidden="true"><use href="#i-home"></use></svg>
+          <span>Dashboard</span>
+        </a>
+        <a class="nav-item" href="#/bank" data-nav="bank">
+          <svg class="icon" aria-hidden="true"><use href="#i-layers"></use></svg>
+          <span>Question bank</span>
+          <span class="nav-count" id="nav-total-count">630</span>
+        </a>
+        <a class="nav-item" href="#/practice" data-nav="practice">
+          <svg class="icon" aria-hidden="true"><use href="#i-target"></use></svg>
+          <span>Practice</span>
+        </a>
+        <a class="nav-item nav-item-exam" href="#/exam" data-nav="exam">
+          <svg class="icon" aria-hidden="true"><use href="#i-timer"></use></svg>
+          <span>Mock exam</span>
+          <span class="nav-badge">60</span>
+        </a>
+
+        <p class="nav-label">Notes by topic</p>
+        <a class="nav-item nav-topic" href="#/notes/systems" data-nav="notes-systems">
+          <span class="dot" style="--dot:#3257c7"></span><span>Systems software</span>
+          <span class="nav-count" data-topic-count="systems"></span>
+        </a>
+        <a class="nav-item nav-topic" href="#/notes/apps" data-nav="notes-apps">
+          <span class="dot" style="--dot:#c2560f"></span><span>Application software</span>
+          <span class="nav-count" data-topic-count="apps"></span>
+        </a>
+        <a class="nav-item nav-topic" href="#/notes/programming" data-nav="notes-programming">
+          <span class="dot" style="--dot:#6d48c8"></span><span>Programming</span>
+          <span class="nav-count" data-topic-count="programming"></span>
+        </a>
+        <a class="nav-item nav-topic" href="#/notes/networks" data-nav="notes-networks">
+          <span class="dot" style="--dot:#0f7a78"></span><span>Computer networks</span>
+          <span class="nav-count" data-topic-count="networks"></span>
+        </a>
+        <a class="nav-item nav-topic" href="#/notes/trends" data-nav="notes-trends">
+          <span class="dot" style="--dot:#bb2d5e"></span><span>Emerging trends</span>
+          <span class="nav-count" data-topic-count="trends"></span>
+        </a>
+        <a class="nav-item nav-topic" href="#/notes/laws" data-nav="notes-laws">
+          <span class="dot" style="--dot:#a06a12"></span><span>Technology laws</span>
+          <span class="nav-count" data-topic-count="laws"></span>
+        </a>
+
+        <p class="nav-label">Progress</p>
+        <a class="nav-item" href="#/progress" data-nav="progress">
+          <svg class="icon" aria-hidden="true"><use href="#i-chart"></use></svg>
+          <span>Readiness report</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-foot">
+        <div class="exam-mini">
+          <div class="exam-mini-top">
+            <span>Final examination</span>
+            <span class="live-dot" aria-hidden="true"></span>
+          </div>
+          <strong>Nov 24 · 12:30 PM</strong>
+          <span class="muted">MM 25 · 60 points</span>
+          <div class="mini-countdown" id="sidebar-countdown" aria-live="off">—</div>
+        </div>
+        <p class="sidebar-note">Built from your six source files.</p>
+      </div>
+    </aside>
+
+    <div class="sidebar-scrim" id="sidebar-scrim" hidden></div>
+
+    <div class="main">
+      <header class="topbar">
+        <button class="icon-btn menu-btn" id="menu-btn" aria-label="Open navigation" aria-expanded="false">
+          <svg class="icon" aria-hidden="true"><use href="#i-menu"></use></svg>
+        </button>
+        <div class="crumbs" id="crumbs">Dashboard</div>
+        <div class="topbar-actions">
+          <a class="btn btn-small btn-ghost hide-sm" href="#/bank">
+            <svg class="icon" aria-hidden="true"><use href="#i-search"></use></svg>
+            <span>Search bank</span>
+          </a>
+          <a class="btn btn-small btn-primary" href="#/exam">Mock exam</a>
+          <button class="icon-btn" id="theme-toggle" aria-label="Toggle color theme">
+            <svg class="icon icon-sun" aria-hidden="true"><use href="#i-sun"></use></svg>
+            <svg class="icon icon-moon" aria-hidden="true"><use href="#i-moon"></use></svg>
+          </button>
+        </div>
+      </header>
+
+      <main id="view" tabindex="-1"></main>
+
+      <footer class="site-footer">
+        <div>
+          <strong>COMPF Review Hub</strong>
+          <p>Study aid distilled from <em>Systems Software</em>, <em>Application Software</em>, <em>Programming Languages</em>, <em>Importance of Computer Networks</em>, <em>Trends and Laws Notes</em>, and <em>COMPF Details + Pointers</em>. Always verify with your instructor.</p>
+        </div>
+        <div class="footer-links">
+          <a href="#/notes/systems">Notes</a>
+          <a href="#/bank">Bank</a>
+          <a href="#/exam">Mock exam</a>
+          <a href="#/progress">Progress</a>
+        </div>
+      </footer>
+    </div>
+  </div>
+
+  <div class="modal-root" id="modal-root"></div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <svg width="0" height="0" class="svg-sprite" aria-hidden="true">
+    <symbol id="i-home" viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><path d="M5 9.5V21h14V9.5M9.5 21v-6h5v6" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-layers" viewBox="0 0 24 24"><path d="m12 3 9 5-9 5-9-5 9-5Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="m3 12 9 5 9-5M3 16l9 5 9-5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.7"/><circle cx="12" cy="12" r="5" fill="none" stroke="currentColor" stroke-width="1.7"/><circle cx="12" cy="12" r="1.4" fill="currentColor"/></symbol>
+    <symbol id="i-timer" viewBox="0 0 24 24"><circle cx="12" cy="13" r="8" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M12 9v4l2.5 2M9 2h6M12 2v3" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></symbol>
+    <symbol id="i-chart" viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="m15.5 15.5 5 5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></symbol>
+    <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M12 2v2.2M12 19.8V22M2 12h2.2M19.8 12H22M4.9 4.9l1.6 1.6M17.5 17.5l1.6 1.6M19.1 4.9l-1.6 1.6M6.5 17.5l-1.6 1.6" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></symbol>
+    <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></symbol>
+    <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+    <symbol id="i-close" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M4 12h16M14 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="m4 12.5 5 5L20 6.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-flag" viewBox="0 0 24 24"><path d="M5 21V4m0 1h12l-2.2 4L17 13H5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M12 7v5.4l3.2 1.9" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></symbol>
+    <symbol id="i-left" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-right" viewBox="0 0 24 24"><path d="m9 5 7 7-7 7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-printer" viewBox="0 0 24 24"><path d="M7 9V3h10v6M7 18H4v-7h16v7h-3M7 14h10v7H7v-7Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-reset" viewBox="0 0 24 24"><path d="M4 5v5h5M4.6 14a8 8 0 1 0 1.9-8.3L4 10" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-alert" viewBox="0 0 24 24"><path d="M12 3 2.5 20h19L12 3Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M12 9v5M12 17.2v.2" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></symbol>
+    <symbol id="i-book" viewBox="0 0 24 24"><path d="M4 5.5c3-1 5-1 8 .5 3-1.5 5-1.5 8-.5V19c-3-1-5-1-8 .5-3-1.5-5-1.5-8-.5V5.5Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M12 6v13.5" fill="none" stroke="currentColor" stroke-width="1.7"/></symbol>
+    <symbol id="i-spark" viewBox="0 0 24 24"><path d="M12 2.5 14 9l6.5 2-6.5 2L12 21.5 10 13 3.5 11 10 9l2-6.5Z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></symbol>
+  </svg>
+
+  <script src="assets/js/bank.js"></script>
+  <script src="assets/js/content.js"></script>
+  <script src="assets/js/core.js"></script>
+  <script src="assets/js/app.js"></script>
+  <script src="assets/js/exam.js"></script>
+</body>
+</html>
